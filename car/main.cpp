@@ -1,4 +1,5 @@
 #include "MotorDriver.h"
+#include "EncoderDriver.h"
 #include "mbed.h"
 #include "nRF24L01P.h"
 
@@ -12,8 +13,8 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, s
 // PTB3: motor 2 (direito) - antihorario
 MotorDriver motorDriver(PTC1, PTC2, PTB3, PTB2);
 
-DigitalIn encLeft(PTA12); // enc1
-DigitalIn encRight(PTD4); // enc2
+EncoderDriver encoderLeft(PTA12); // enc1
+EncoderDriver encoderRight(PTD4); // enc2
 
 int main() {
     #define TRANSFER_SIZE 1
@@ -55,21 +56,14 @@ int main() {
             }
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
-                int lastPosLeft = encLeft.read();
-                int rotCount = 0;
                 motorDriver.left();
-                while (rotCount < 20) {
-                    if(encLeft.read() != lastPosLeft){
-                        lastPosLeft = encLeft.read();
-                        rotCount++;
-                    }
-                    pc.printf("%d", rotCount);
-                }
+                encoderLeft.wait(20); 
                 motorDriver.stop();
             }
             else if (rxData[0] == 'd'){
                 // ligar direito sentido horario
                 motorDriver.right();
+
             }
             else if (rxData[0] == 's'){
                 // parar ambos

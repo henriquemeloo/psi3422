@@ -5,9 +5,18 @@ EncoderDriver::EncoderDriver(PinName encoderPin) {
     this->encoder = new DigitalIn(encoderPin);
 }
 
-EncoderDriver::wait(int pulses) {
+void EncoderDriver::wait (int pulses) {
     // Wait for pulses to be sensed by encoder.
-    
+    int lastEncoderSignal = *encoder.read();
+    int pulsesCount = 0;
+
+    while (pulsesCount < pulses) {
+        if(*encoder.read() != lastEncoderSignal){
+            lastEncoderSignal = *encoder.read();
+            pulsesCount++;
+        }
+        pc.printf("%d", pulsesCount);
+    }
 }
 
 int EncoderDriver::distanceToPulses (double distance) {
