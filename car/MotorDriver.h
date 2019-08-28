@@ -13,7 +13,8 @@ class MotorDriver {
         void bkw();
         void left();
         void right();
-    
+        void clk();
+        void cclk();    
 
     private:
         DigitalOut *motorLeftClk;

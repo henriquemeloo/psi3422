@@ -18,7 +18,8 @@ DigitalIn encRight(PTD4); // enc2
 int main() {
     #define TRANSFER_SIZE 1
 
-    char txData[TRANSFER_SIZE], rxData[TRANSFER_SIZE];
+    char rxData[TRANSFER_SIZE];
+    int rxDataCnt = 0;
 
     my_nrf24l01p.powerUp();
     
