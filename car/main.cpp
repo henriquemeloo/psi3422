@@ -57,7 +57,7 @@ int main() {
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
                 motorDriver.left();
-                encoderLeft.wait(20); 
+                encoderLeft.waitPulses(20); 
                 motorDriver.stop();
             }
             else if (rxData[0] == 'd'){

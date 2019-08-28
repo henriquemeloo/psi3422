@@ -1,21 +1,21 @@
 #include "EncoderDriver.h"
-#include <math.h>
+const double pi = 3.14159265358979323846;
 
 EncoderDriver::EncoderDriver(PinName encoderPin) {
     this->encoder = new DigitalIn(encoderPin);
 }
 
-void EncoderDriver::wait (int pulses) {
+void EncoderDriver::waitPulses (int pulses) {
     // Wait for pulses to be sensed by encoder.
-    int lastEncoderSignal = *encoder.read();
+    int lastEncoderSignal = (*encoder).read();
     int pulsesCount = 0;
 
     while (pulsesCount < pulses) {
-        if(*encoder.read() != lastEncoderSignal){
-            lastEncoderSignal = *encoder.read();
+        wait_ms(5);
+        if((*encoder).read() != lastEncoderSignal){
+            lastEncoderSignal = (*encoder).read();
             pulsesCount++;
         }
-        pc.printf("%d", pulsesCount);
     }
 }
 

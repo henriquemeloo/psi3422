@@ -4,9 +4,9 @@
 
 class EncoderDriver {
     public:
-        EncoderDriver(PinName encoderPin);
-        void wait(int pulses);
-        int distanceToPulses(double distance);
+        EncoderDriver (PinName encoderPin);
+        void waitPulses (int pulses);
+        int distanceToPulses (double distance);
 
     private:
         DigitalIn *encoder;
