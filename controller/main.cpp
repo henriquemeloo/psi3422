@@ -32,9 +32,9 @@ int main() {
 
     my_nrf24l01p.powerUp();
     
-    my_nrf24l01p.setRfFrequency(2450);
-    my_nrf24l01p.setTxAddress(0x1A000000AA, 5);
-    my_nrf24l01p.setRxAddress(0x1A000000AA, 5, 0);
+    my_nrf24l01p.setRfFrequency(2510);
+    my_nrf24l01p.setTxAddress(0x1A001000AA, 5);
+    my_nrf24l01p.setRxAddress(0x1A001000AA, 5, 0);
     
     // Display the (default) setup of the nRF24L01+ chip
     pc.printf( "nRF24L01+ Frequency    : %d MHz\r\n",  my_nrf24l01p.getRfFrequency() );
