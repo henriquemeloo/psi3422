@@ -1,3 +1,4 @@
+#include "MotorDriver.h"
 #include "mbed.h"
 #include "nRF24L01P.h"
 
@@ -12,48 +13,11 @@ DigitalOut myled2(LED2);
 // PTC2: motor 1 (esquerdo) - antihorario
 // PTB2: motor 2 (direito) - horario 
 // PTB3: motor 2 (direito) - antihorario
-DigitalOut motorLeftClk(PTC1);
-DigitalOut motorLeftNClk(PTC2);
-DigitalOut motorRightClk(PTB3);
-DigitalOut motorRightNClk(PTB2);
+MotorDriver motorDriver(PTC1, PTC2, PTB3, PTB2);
 
 DigitalIn encLeft(PTA12); // enc1
 DigitalIn encRight(PTD4); // enc2
 
-void stop(){
-    motorLeftClk = 0;
-    motorLeftNClk = 0;
-    motorRightClk = 0;
-    motorRightNClk = 0;
-}
-
-void fwd(){
-    motorLeftClk = 1;
-    motorLeftNClk = 0;
-    motorRightClk = 1;
-    motorRightNClk = 0;
-}
-
-void bkw(){
-    motorLeftClk = 0;
-    motorLeftNClk = 1;
-    motorRightClk = 0;
-    motorRightNClk = 1;
-}
-
-void left(){
-    motorLeftClk = 1;
-    motorLeftNClk = 0;
-    motorRightClk = 0;
-    motorRightNClk = 0;
-}
-
-void right(){
-    motorLeftClk = 0;
-    motorLeftNClk = 0;
-    motorRightClk = 1;
-    motorRightNClk = 0;
-}
 
 int main() {
 
@@ -93,7 +57,7 @@ int main() {
         //pc.printf("\r%d\n", encLeft.read());
               
         // If we've received anything over the host serial link...
-        if ( pc.readable() ) {
+/*         if ( pc.readable() ) {
 
             // ...add it to the transmit buffer
             txData[txDataCnt++] = pc.getc();
@@ -109,7 +73,7 @@ int main() {
 
             // Toggle LED1 (to help debug Host -> nRF24L01+ communication)
             //myled1 = !myled1;
-        }
+        } */
 
         // If we've received anything in the nRF24L01+...
         if ( my_nrf24l01p.readable() ) {
@@ -130,12 +94,12 @@ int main() {
             // controle dos motores
             if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
-                fwd();
+                motorDriver.fwd();
             } else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
                 int lastPosLeft = encLeft.read();
                 int rotCount = 0;
-                left();
+                motorDriver.left();
                 while (rotCount < 20){
                     if(encLeft.read() != lastPosLeft){
                         lastPosLeft = encLeft.read();
@@ -143,13 +107,13 @@ int main() {
                     }
                     pc.printf("%d", rotCount);
                 }
-                stop();
+                motorDriver.stop();
             } else if (rxData[0] == 'd'){
                 // ligar direito sentido horario
-                right();
+                motorDriver.right();
             } else if (rxData[0] == 's'){
                 // parar ambos
-                stop();
+                motorDriver.stop();
             }
             
             
