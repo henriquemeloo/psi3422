@@ -6,7 +6,9 @@ EncoderDriver::EncoderDriver(PinName encoderPin) {
 }
 
 void EncoderDriver::waitPulses (int pulses) {
-    // Wait for pulses to be sensed by encoder.
+    /* 
+    Waits for number of pulses to be sensed by encoder.
+    */
     int lastEncoderSignal = (*encoder).read();
     int pulsesCount = 0;
 
@@ -20,6 +22,10 @@ void EncoderDriver::waitPulses (int pulses) {
 }
 
 int EncoderDriver::distanceToPulses (double distance) {
+    /* 
+    Converts distance in cm to number of pulses to wait from the
+    encoder.
+    */
     double radius = 4.2;
     int totalPulses = 18;
 
