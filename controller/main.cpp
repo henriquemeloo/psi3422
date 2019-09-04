@@ -11,9 +11,30 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);
 DigitalOut myled1(LED1);
 
 
+/* void mapModeControl(char txData, int txDataCnt, char rxData){
+    // transfer to car
+    if ( txDataCnt >= sizeof( txData ) ) {
+        // Send the transmitbuffer via the nRF24L01+
+        my_nrf24l01p.write( NRF24L01P_PIPE_P0, txData, txDataCnt );
+    }
+     // wait for map mode confirmation from car
+    while (1) {
+        if ( my_nrf24l01p.readable() ) {
+        // ...read the data into the receive buffer
+        rxDataCnt = my_nrf24l01p.read( NRF24L01P_PIPE_P0, rxData, sizeof( rxData ) );
+            if (rxData[0] == "1") {
+                break;
+            }
+        }
+    } 
+    // process 
+    
+} */
+
+
 int main() {
     #define TRANSFER_SIZE 1
-
+    
     char txData[TRANSFER_SIZE];
     int txDataCnt = 0;
 

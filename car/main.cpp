@@ -16,6 +16,55 @@ MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
+// LED for debugging
+DigitalOut myled1(LED1);
+
+#define PULSES_90_DEG 18
+
+void mapMode (char* rxData, int rxDataCnt) {
+    myled1 = 0;
+    int coordsLen = 4;
+    char xCoord[coordsLen], yCoord[coordsLen];
+    int xCnt = 0;
+    int yCnt = 0;
+    int x, y;
+    // receber coordenadas
+    while ((xCnt < coordsLen) & (yCnt < coordsLen)) {
+        if ( my_nrf24l01p.readable() ) {
+            // ...read the data into the receive buffer
+            rxDataCnt = my_nrf24l01p.read( NRF24L01P_PIPE_P0, rxData, sizeof( rxData ) );
+            // fill xCoord first then yCoord
+            if (xCnt < coordsLen) {
+                xCoord[xCnt] = rxData[0];
+                xCnt++;
+            }
+            else if (yCnt < coordsLen){
+                yCoord[yCnt] = rxData[0];
+                yCnt++;
+            }
+        }
+    }
+    x = (int)xCoord;
+    y = (int)yCoord;
+
+    // mover na direcao y
+    motor.fwd();
+    encoderLeft.waitPulses(encoderLeft.distanceToPulses(y));
+    motor.stop();
+
+    //girar 90 graus no sentido horario
+    motor.clk();
+    encoderLeft.waitPulses(PULSES_90_DEG);
+    motor.stop();
+
+    // mover na direcao x
+    motor.fwd();
+    encoderLeft.waitPulses(encoderLeft.distanceToPulses(x));
+    motor.stop();
+    
+    myled1 = 1;
+}
+
 int main() {
     #define TRANSFER_SIZE 1
 
@@ -49,8 +98,13 @@ int main() {
             // ...read the data into the receive buffer
             rxDataCnt = my_nrf24l01p.read( NRF24L01P_PIPE_P0, rxData, sizeof( rxData ) );
 
+            // map mode
+            if (rxData[0] == 'M'){
+                mapMode(rxData, rxDataCnt);
+            }
+
             // controle dos motores
-            if (rxData[0] == 'w'){
+            else if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
                 motor.fwd();
             }
