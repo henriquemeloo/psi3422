@@ -1,4 +1,4 @@
-#include "Ultrasonic.h"
+#include "UltrasonicDriver.h"
 #include "mbed.h"
 
 Ultrasonic::Ultrasonic(PinName tx, PinName rx) : _tx(tx),_rx(rx)

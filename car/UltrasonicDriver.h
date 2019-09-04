@@ -1,5 +1,5 @@
-#ifndef MBED_Ultrasonic_H
-#define MBED_Ultrasonic_H
+#ifndef ULTRASONICDRIVER_H
+#define ULTRASONICDRIVER_H
 
 #include "mbed.h"
 
