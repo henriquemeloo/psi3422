@@ -3,10 +3,10 @@
 
 #include "mbed.h"
 
-class Ultrasonic
+class UltrasonicDriver
 {
 public:
-    Ultrasonic(PinName tx, PinName rx);
+    UltrasonicDriver(PinName tx, PinName rx);
     float read();
 
 private:

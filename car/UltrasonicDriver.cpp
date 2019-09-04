@@ -1,16 +1,16 @@
 #include "UltrasonicDriver.h"
 #include "mbed.h"
 
-Ultrasonic::Ultrasonic(PinName tx, PinName rx) : _tx(tx),_rx(rx)
+UltrasonicDriver::UltrasonicDriver(PinName tx, PinName rx) : _tx(tx),_rx(rx)
 {
     _tx.input();
     t.reset();
-    triger.attach(this, &Ultrasonic::triger_func, 0.1);
-    _rx.rise(this, &Ultrasonic::start_func);
-    _rx.fall(this, &Ultrasonic::end_func);
+    triger.attach(this, &UltrasonicDriver::triger_func, 0.1);
+    _rx.rise(this, &UltrasonicDriver::start_func);
+    _rx.fall(this, &UltrasonicDriver::end_func);
 }
 
-void Ultrasonic::triger_func()
+void UltrasonicDriver::triger_func()
 {
     _tx.output();
     _tx = 1;
@@ -20,13 +20,13 @@ void Ultrasonic::triger_func()
 
 }
 
-void Ultrasonic::start_func()
+void UltrasonicDriver::start_func()
 {
     t.reset();
     t.start();
 }
 
-void Ultrasonic::end_func()
+void UltrasonicDriver::end_func()
 {
     t.stop();
     if (( t > 0.00012 ) & ( t < 0.0187)) {
@@ -34,7 +34,7 @@ void Ultrasonic::end_func()
     }
 }
 
-float Ultrasonic::read()
+float UltrasonicDriver::read()
 {
     return eco;
 }
