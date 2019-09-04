@@ -11,7 +11,7 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, s
 // PTC2: motor 1 (esquerdo) - antihorario
 // PTB2: motor 2 (direito) - horario 
 // PTB3: motor 2 (direito) - antihorario
-MotorDriver motorDriver(PTC1, PTC2, PTB3, PTB2);
+MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
@@ -52,30 +52,30 @@ int main() {
             // controle dos motores
             if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
-                motorDriver.fwd();
+                motor.fwd();
             }
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
-                motorDriver.left();
+                motor.left();
                 encoderLeft.waitPulses(20); 
-                motorDriver.stop();
+                motor.stop();
             }
             else if (rxData[0] == 'd'){
                 // ligar direito sentido horario
-                motorDriver.right();
+                motor.right();
 
             }
             else if (rxData[0] == 's'){
                 // parar ambos
-                motorDriver.stop();
+                motor.stop();
             }
             else if (rxData[0] == 'e'){
                 // girar sentido horario
-                motorDriver.clk();
+                motor.clk();
             }
             else if (rxData[0] == 'q'){
                 // girar sentido antihorario
-                motorDriver.cclk();
+                motor.cclk();
             }
             
 
