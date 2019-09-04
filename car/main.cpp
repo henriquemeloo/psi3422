@@ -1,5 +1,6 @@
 #include "MotorDriver.h"
 #include "EncoderDriver.h"
+#include "UltrasonicDriver.h"
 #include "mbed.h"
 #include "nRF24L01P.h"
 
@@ -16,8 +17,11 @@ MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
+UltrasonicDriver ultrasonic(PTA2, PTA1); // tx, rx
+
 // LED for debugging
 DigitalOut myled1(LED1);
+DigitalOut myled2(LED2);
 
 #define PULSES_90_DEG 18
 
@@ -92,6 +96,12 @@ int main() {
     my_nrf24l01p.enable();
 
     while (1) {
+        // Basic ultrasonic test
+        if (ultrasonic.read() < 20){
+            myled2 = 0;
+        } else{
+            myled2 = 1;
+        }
 
         // If we've received anything in the nRF24L01+...
         if ( my_nrf24l01p.readable() ) {
