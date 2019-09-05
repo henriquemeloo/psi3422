@@ -23,7 +23,7 @@ UltrasonicDriver ultrasonic(PTA2, PTA1); // tx, rx
 DigitalOut myled1(LED1);
 DigitalOut myled2(LED2);
 
-#define PULSES_90_DEG 18
+#define PULSES_90_DEG 10
 
 void mapMode (char* rxData, int rxDataCnt) {
     myled1 = 0;
