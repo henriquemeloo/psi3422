@@ -59,6 +59,7 @@ int main() {
     my_nrf24l01p.enable();
 
     while (1) {
+        myled1 = 1;
         // If we've received anything over the host serial link...
         if ( pc.readable() ) {
             // ...add it to the transmit buffer

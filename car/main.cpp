@@ -27,15 +27,18 @@ DigitalOut myled2(LED2);
 
 void mapMode (char* rxData, int rxDataCnt) {
     myled1 = 0;
-    int coordsLen = 4;
+    int coordsLen = 3;
+    pc.printf(
+        "Map mode =======\r\n\tType x coordinate in cm with %d digits followed by y coordinate in cm with %d digits\r\n",
+        coordsLen, coordsLen
+    );
     char xCoord[coordsLen], yCoord[coordsLen];
     int xCnt = 0;
     int yCnt = 0;
     int x, y;
     // receber coordenadas
-    while ((xCnt < coordsLen) & (yCnt < coordsLen)) {
+    while ((xCnt < coordsLen) || (yCnt < coordsLen)) {
         if ( my_nrf24l01p.readable() ) {
-            // ...read the data into the receive buffer
             rxDataCnt = my_nrf24l01p.read( NRF24L01P_PIPE_P0, rxData, sizeof( rxData ) );
             // fill xCoord first then yCoord
             if (xCnt < coordsLen) {
@@ -48,8 +51,10 @@ void mapMode (char* rxData, int rxDataCnt) {
             }
         }
     }
-    x = (int)xCoord;
-    y = (int)yCoord;
+    
+    sscanf(xCoord, "%d", &x);
+    sscanf(yCoord, "%d", &y);
+    pc.printf("(x, y) = (%d, %d) \r\n", x, y);
 
     // mover na direcao y
     motor.fwd();
