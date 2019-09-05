@@ -44,15 +44,15 @@ void MotorDriver::right(){
 };
 
 void MotorDriver::clk(){
-    *motorLeftClk = 0;
-    *motorLeftNClk = 1;
-    *motorRightClk = 1;
-    *motorRightNClk = 0;
-};
-
-void MotorDriver::cclk(){
     *motorLeftClk = 1;
     *motorLeftNClk = 0;
     *motorRightClk = 0;
     *motorRightNClk = 1;
+};
+
+void MotorDriver::cclk(){
+    *motorLeftClk = 0;
+    *motorLeftNClk = 1;
+    *motorRightClk = 1;
+    *motorRightNClk = 0;
 };
