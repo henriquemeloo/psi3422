@@ -95,6 +95,9 @@ int main() {
     my_nrf24l01p.setReceiveMode();
     my_nrf24l01p.enable();
 
+    myled1 = 1;
+    myled2 = 1;
+
     while (1) {
         // Basic ultrasonic test
         if (ultrasonic.read() < 20){
