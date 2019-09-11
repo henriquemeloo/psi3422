@@ -35,15 +35,15 @@ void dist(int distance) {
 // tx, rx, update interval, timeout, method when distance changed
 UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
-void runDistance(int distance, EncoderDriver encoder) {
-    pulses = encoder.distanceToPulses(distance);
-    int lastEncoderSignal = encoder.(*encoder).read();
+void runDistance(int distance) {
+    int pulses = encoderLeft.distanceToPulses(distance);
+    int lastEncoderSignal = encoderLeft.encoder->read();
     int pulsesCount = 0;
 
     while (pulsesCount < pulses) {
         wait_ms(30);
-        if(encoder.(*encoder).read() != lastEncoderSignal){
-            lastEncoderSignal = encoder.(*encoder).read();
+        if(encoderLeft.encoder->read() != lastEncoderSignal){
+            lastEncoderSignal = encoderLeft.encoder->read();
             pulsesCount++;
         }
     }
@@ -150,7 +150,7 @@ int main() {
             else if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
                 motor.fwd();
-                runDistance(30, encoderLeft);
+                runDistance(30);
                 motor.stop();
             }
             else if (rxData[0] == 'a'){
