@@ -35,22 +35,51 @@ void dist(int distance) {
 // tx, rx, update interval, timeout, method when distance changed
 UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
+void spin(bool clockwise) {
+    if (clockwise){
+        motor.clk();
+    }
+    else {
+        motor.cclk();
+    }
+    encoderRight.waitPulses(PULSES_90_DEG);
+    motor.stop();
+}
+
 void runDistance(int distance) {
-    int pulses = encoderLeft.distanceToPulses(distance);
-    int lastEncoderSignal = encoderLeft.encoder->read();
+    int pulses = encoderRight.distanceToPulses(distance);
+    int lastEncoderSignal = encoderRight.encoder->read();
     int pulsesCount = 0;
 
+    motor.fwd();
     while (pulsesCount < pulses) {
         wait_ms(30);
-        if(encoderLeft.encoder->read() != lastEncoderSignal){
-            lastEncoderSignal = encoderLeft.encoder->read();
+        if(encoderRight.encoder->read() != lastEncoderSignal){
+            lastEncoderSignal = encoderRight.encoder->read();
             pulsesCount++;
         }
     }
+    motor.stop();
 }
 
 void avoidObstacle() {
+    int avoidX = 61; // run 61 cm to the left to avoid obstacle
+    int avoidY = 50; // run 50 cm forward to avoid obstacle
 
+    // spin clockwise 90 deg
+    spin(1);
+    // run right
+    runDistance(avoidX);
+    // spin counter-clockwise 90 deg
+    spin(0);
+    // run forward
+    runDistance(avoidY);
+    // spin counter-clockwise 90 deg
+    spin(0);
+    // run left
+    runDistance(avoidX);
+    // spin clockwise 90 deg
+    spin(1);
 }
 
 void mapMode (char* rxData, int rxDataCnt) {
@@ -149,9 +178,7 @@ int main() {
             // controle dos motores
             else if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
-                motor.fwd();
                 runDistance(30);
-                motor.stop();
             }
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
@@ -176,8 +203,17 @@ int main() {
                 // girar sentido antihorario
                 motor.cclk();
             }
+            else if (rxData[0] == 'o'){
+                // testar desvio de obstaculo
+                avoidObstacle();
+            }
+            else if (rxData[0] == 'c'){
+                spin(1);
+            }
+            else if (rxData[0] == 'z'){
+                spin(0);
+            }
             
-
             // Display the receive buffer contents via the host serial link
             for ( int i = 0; rxDataCnt > 0; rxDataCnt--, i++ ) {
                 pc.putc( rxData[i] );   
