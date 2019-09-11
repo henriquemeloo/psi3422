@@ -19,16 +19,16 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, s
 // PTB3: motor 2 (direito) - antihorario
 MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 
-#define PULSES_90_DEG 10
+#define PULSES_90_DEG 19
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
 void dist(int distance) {
     //put code here to happen when the distance is changed
     // Basic ultrasonic test
-    if (distance < 30){
+    if (distance < 300){
         myled2 = 0;
-    } else{
+    } else {
         myled2 = 1;
     }
 }
@@ -68,17 +68,17 @@ void mapMode (char* rxData, int rxDataCnt) {
 
     // mover na direcao y
     motor.fwd();
-    encoderLeft.waitPulses(encoderLeft.distanceToPulses(y));
+    encoderRight.waitPulses(encoderRight.distanceToPulses(y));
     motor.stop();
 
     //girar 90 graus no sentido horario
     motor.clk();
-    encoderLeft.waitPulses(PULSES_90_DEG);
+    encoderRight.waitPulses(PULSES_90_DEG);
     motor.stop();
 
     // mover na direcao x
     motor.fwd();
-    encoderLeft.waitPulses(encoderLeft.distanceToPulses(x));
+    encoderRight.waitPulses(encoderRight.distanceToPulses(x));
     motor.stop();
     
     myled1 = 1;
@@ -136,7 +136,7 @@ int main() {
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
                 motor.left();
-                encoderLeft.waitPulses(20); 
+                encoderLeft.waitPulses(20);
                 motor.stop();
             }
             else if (rxData[0] == 'd'){
