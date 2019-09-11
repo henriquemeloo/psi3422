@@ -35,6 +35,24 @@ void dist(int distance) {
 // tx, rx, update interval, timeout, method when distance changed
 UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
+void runDistance(int distance, EncoderDriver encoder) {
+    pulses = encoder.distanceToPulses(distance);
+    int lastEncoderSignal = encoder.(*encoder).read();
+    int pulsesCount = 0;
+
+    while (pulsesCount < pulses) {
+        wait_ms(30);
+        if(encoder.(*encoder).read() != lastEncoderSignal){
+            lastEncoderSignal = encoder.(*encoder).read();
+            pulsesCount++;
+        }
+    }
+}
+
+void avoidObstacle() {
+
+}
+
 void mapMode (char* rxData, int rxDataCnt) {
     myled1 = 0;
     int coordsLen = 3;
@@ -132,6 +150,8 @@ int main() {
             else if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
                 motor.fwd();
+                runDistance(30, encoderLeft);
+                motor.stop();
             }
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario

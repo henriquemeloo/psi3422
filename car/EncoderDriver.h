@@ -7,8 +7,6 @@ class EncoderDriver {
         EncoderDriver (PinName encoderPin);
         void waitPulses (int pulses);
         int distanceToPulses (double distance);
-
-    private:
         DigitalIn *encoder;
 };
 
