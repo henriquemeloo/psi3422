@@ -6,6 +6,11 @@
 
 Serial pc(USBTX, USBRX); // tx, rx
 
+// LED for debugging
+DigitalOut myled1(LED1);
+DigitalOut myled2(LED2);
+
+#define TRANSFER_SIZE 1
 nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, sck, csn, ce, irq
 
 // PTC1: motor 1 (esquerdo) - horario 
@@ -14,16 +19,21 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, s
 // PTB3: motor 2 (direito) - antihorario
 MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 
+#define PULSES_90_DEG 10
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
-UltrasonicDriver ultrasonic(PTA2, PTA1); // tx, rx
-
-// LED for debugging
-DigitalOut myled1(LED1);
-DigitalOut myled2(LED2);
-
-#define PULSES_90_DEG 10
+void dist(int distance) {
+    //put code here to happen when the distance is changed
+    // Basic ultrasonic test
+    if (distance < 30){
+        myled2 = 0;
+    } else{
+        myled2 = 1;
+    }
+}
+// tx, rx, update interval, timeout, method when distance changed
+UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
 void mapMode (char* rxData, int rxDataCnt) {
     myled1 = 0;
@@ -75,8 +85,6 @@ void mapMode (char* rxData, int rxDataCnt) {
 }
 
 int main() {
-    #define TRANSFER_SIZE 1
-
     char rxData[TRANSFER_SIZE];
     int rxDataCnt = 0;
 
@@ -103,13 +111,12 @@ int main() {
     myled1 = 1;
     myled2 = 1;
 
+    ultrasonic.startUpdates(); //start mesuring the distance
+
     while (1) {
-        // Basic ultrasonic test
-        if (ultrasonic.read() < 20){
-            myled2 = 0;
-        } else{
-            myled2 = 1;
-        }
+        // call checkDistance() as much as possible, as this is where
+        // the class checks if dist needs to be called.
+        ultrasonic.checkDistance();
 
         // If we've received anything in the nRF24L01+...
         if ( my_nrf24l01p.readable() ) {
