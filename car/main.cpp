@@ -23,6 +23,18 @@ MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
+void avoidObstacle();
+void dist(int distance) {
+    //put code here to happen when the distance is changed
+    if (distance < 150){
+        myled2 = 0;
+        avoidObstacle();
+    } else {
+        myled2 = 1;
+    }
+}
+// tx, rx, update interval, timeout, method when distance changed
+UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
 void spin(bool clockwise) {
     if (clockwise){
@@ -120,19 +132,6 @@ void mapMode (char* rxData, int rxDataCnt) {
     
     myled1 = 1;
 }
-
-void dist(int distance) {
-    //put code here to happen when the distance is changed
-    // Basic ultrasonic test
-    if (distance < 150){
-        myled2 = 0;
-        avoidObstacle();
-    } else {
-        myled2 = 1;
-    }
-}
-// tx, rx, update interval, timeout, method when distance changed
-UltrasonicDriver ultrasonic(PTA2, PTA1, .1, 1, &dist);
 
 
 int main() {
