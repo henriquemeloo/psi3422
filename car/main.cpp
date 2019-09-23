@@ -19,7 +19,7 @@ nRF24L01P my_nrf24l01p(PTD2, PTD3, PTC5, PTD0, PTD5, PTA13);    // mosi, miso, s
 // PTB3: motor 2 (direito) - antihorario
 MotorDriver motor(PTC1, PTC2, PTB3, PTB2);
 
-#define PULSES_90_DEG 19
+#define PULSES_90_DEG 18
 EncoderDriver encoderLeft(PTA12); // enc1
 EncoderDriver encoderRight(PTD4); // enc2
 
@@ -67,8 +67,8 @@ void runDistance(int distance, bool checkUltrasonic) {
 }
 
 void avoidObstacle() {
-    int avoidX = 61; // run 61 cm to the left to avoid obstacle
-    int avoidY = 50; // run 50 cm forward to avoid obstacle
+    int avoidX = 50; // run 61 cm to the left to avoid obstacle
+    int avoidY = 70; // run 50 cm forward to avoid obstacle
      
     // spin clockwise 90 deg
     spin(1);
