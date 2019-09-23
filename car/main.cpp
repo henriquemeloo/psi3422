@@ -47,14 +47,16 @@ void spin(bool clockwise) {
     motor.stop();
 }
 
-void runDistance(int distance) {
+void runDistance(int distance, bool checkUltrasonic) {
     int pulses = encoderRight.distanceToPulses(distance);
     int lastEncoderSignal = encoderRight.encoder->read();
     int pulsesCount = 0;
 
-    motor.fwd();
     while (pulsesCount < pulses) {
-        ultrasonic.checkDistance();
+        motor.fwd();
+        if (checkUltrasonic){
+            ultrasonic.checkDistance();
+        }
         wait_ms(30);
         if(encoderRight.encoder->read() != lastEncoderSignal){
             lastEncoderSignal = encoderRight.encoder->read();
@@ -67,21 +69,22 @@ void runDistance(int distance) {
 void avoidObstacle() {
     int avoidX = 61; // run 61 cm to the left to avoid obstacle
     int avoidY = 50; // run 50 cm forward to avoid obstacle
-
+     
     // spin clockwise 90 deg
     spin(1);
     // run right
-    runDistance(avoidX);
+    runDistance(avoidX, false);
     // spin counter-clockwise 90 deg
     spin(0);
     // run forward
-    runDistance(avoidY);
+    runDistance(avoidY, false);
     // spin counter-clockwise 90 deg
     spin(0);
     // run left
-    runDistance(avoidX);
+    runDistance(avoidX, false);
     // spin clockwise 90 deg
     spin(1);
+    
 }
 
 void mapMode (char* rxData, int rxDataCnt) {
@@ -116,19 +119,13 @@ void mapMode (char* rxData, int rxDataCnt) {
     pc.printf("(x, y) = (%d, %d) \r\n", x, y);
 
     // mover na direcao y
-    motor.fwd();
-    encoderRight.waitPulses(encoderRight.distanceToPulses(y));
-    motor.stop();
+    runDistance(y, true);
 
     //girar 90 graus no sentido horario
-    motor.clk();
-    encoderRight.waitPulses(PULSES_90_DEG);
-    motor.stop();
+    spin(1);
 
     // mover na direcao x
-    motor.fwd();
-    encoderRight.waitPulses(encoderRight.distanceToPulses(x));
-    motor.stop();
+    runDistance(x, true);
     
     myled1 = 1;
 }
@@ -164,9 +161,6 @@ int main() {
     ultrasonic.startUpdates(); //start mesuring the distance
 
     while (1) {
-        // call checkDistance() as much as possible, as this is where
-        // the class checks if dist needs to be called.
-
         // If we've received anything in the nRF24L01+...
         if ( my_nrf24l01p.readable() ) {
             // ...read the data into the receive buffer
@@ -180,7 +174,7 @@ int main() {
             // controle dos motores
             else if (rxData[0] == 'w'){
                 // ligar ambos sentido horario
-                runDistance(30);
+                runDistance(30, false);
             }
             else if (rxData[0] == 'a'){
                 // ligar esquerdo sentido horario
