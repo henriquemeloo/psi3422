@@ -166,7 +166,6 @@ int main() {
     while (1) {
         // call checkDistance() as much as possible, as this is where
         // the class checks if dist needs to be called.
-        ultrasonic.checkDistance();
 
         // If we've received anything in the nRF24L01+...
         if ( my_nrf24l01p.readable() ) {
