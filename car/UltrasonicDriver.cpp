@@ -9,7 +9,7 @@ UltrasonicDriver::UltrasonicDriver(
 }
 
 UltrasonicDriver::UltrasonicDriver(
-    PinName trigPin, PinName echoPin, float updateSpeed, float timeout, void onUpdate(int)
+    PinName trigPin, PinName echoPin, float updateSpeed, float timeout, bool onUpdate(int)
     ):_trig(trigPin), _echo(echoPin) {
     _onUpdateMethod=onUpdate;
     _updateSpeed = updateSpeed;
@@ -59,7 +59,7 @@ void UltrasonicDriver::startUpdates(void) {
     _startTrig();
 }
 
-void UltrasonicDriver::attachOnUpdate(void method(int)) {
+void UltrasonicDriver::attachOnUpdate(bool method(int)) {
     _onUpdateMethod = method;
 }
 
@@ -78,8 +78,8 @@ int UltrasonicDriver::isUpdated(void) {
     return d;
 }
 
-void UltrasonicDriver::checkDistance(void) {
+bool UltrasonicDriver::checkDistance(void) {
     if(isUpdated()) {
-        (*_onUpdateMethod)(_distance);
+        return (*_onUpdateMethod)(_distance);
     }
 }
