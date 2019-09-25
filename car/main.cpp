@@ -57,7 +57,7 @@ void runDistance(int distance, bool checkUltrasonic) {
         if (checkUltrasonic){
             ultrasonic.checkDistance();
         }
-        wait_ms(30);
+        wait_ms(10);
         if(encoderRight.encoder->read() != lastEncoderSignal){
             lastEncoderSignal = encoderRight.encoder->read();
             pulsesCount++;

@@ -13,7 +13,7 @@ void EncoderDriver::waitPulses (int pulses) {
     int pulsesCount = 0;
 
     while (pulsesCount < pulses) {
-        wait_ms(30);
+        wait_ms(10);
         if((*encoder).read() != lastEncoderSignal){
             lastEncoderSignal = (*encoder).read();
             pulsesCount++;
@@ -27,7 +27,7 @@ int EncoderDriver::distanceToPulses (double distance) {
     encoder.
     */
     double radius = 4.2;
-    int totalPulses = 36;
+    int totalPulses = 72;
 
     int pulses = distance / ((2 * pi * radius) / totalPulses);
     
