@@ -66,22 +66,21 @@ void runDistance(int distance, bool checkUltrasonic) {
     motor.stop();
 }
 
+#define AVOID_X 50 // run 50 cm to the left to avoid obstacle
+#define AVOID_Y 65 // run 65 cm forward to avoid obstacle
 void avoidObstacle() {
-    int avoidX = 50; // run 61 cm to the left to avoid obstacle
-    int avoidY = 70; // run 50 cm forward to avoid obstacle
-     
     // spin clockwise 90 deg
     spin(1);
     // run right
-    runDistance(avoidX, false);
+    runDistance(AVOID_X, false);
     // spin counter-clockwise 90 deg
     spin(0);
     // run forward
-    runDistance(avoidY, false);
+    runDistance(AVOID_Y, false);
     // spin counter-clockwise 90 deg
     spin(0);
     // run left
-    runDistance(avoidX, false);
+    runDistance(AVOID_X, false);
     // spin clockwise 90 deg
     spin(1);
     
